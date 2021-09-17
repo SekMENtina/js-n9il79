@@ -98,5 +98,6 @@ series.strokes.template.setAll({
 });
 
 series.appear();
+chart.appear();
 series.data.setAll(items);
 xAxis.data.setAll(items);
