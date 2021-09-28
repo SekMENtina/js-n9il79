@@ -16,6 +16,12 @@ import {
   CategoryAxis,
 } from '@amcharts/amcharts5/xy';
 
+import { throttle } from 'lodash-es';
+
+const handleCursorMove = throttle((e) => {
+  console.log('cursor moved');
+}, 500);
+
 const items = [
   { date: 1593550800000, value: 100 },
   { date: 1593599136000, value: 30 },
@@ -39,7 +45,7 @@ let xAxis = null;
 let yAxis = null;
 let root = null;
 
-root = Root.new(document.querySelector('#app'));
+root = Root.new(document.querySelector('#chart'));
 
 root.setThemes([AnimatedTheme.new(root)]);
 root.locale = chartLocale_ru_RU;
@@ -57,27 +63,28 @@ chart = root.container.children.push(
 );
 
 yAxis = chart.yAxes.push(
-  ValueAxis.new(root, { renderer: AxisRendererY.new(root, {}) })
+  ValueAxis.new(root, {
+    renderer: AxisRendererY.new(root, {}),
+  })
 );
-yAxis.setAll({ tooltip: Tooltip.new(root, { themeTags: ['axis'] }) });
 
 xAxis = chart.xAxes.push(
-  CategoryDateAxis.new(root, {
+  DateAxis.new(root, {
     baseInterval: { timeUnit: 'minute', count: 1 },
     renderer: AxisRendererX.new(root, {}),
     tooltipDateFormat: 'dd.MM HH:mm',
     categoryField: 'date',
+    tooltip: Tooltip.new(root, { themeTags: ['axis'] }),
   })
 );
-xAxis.setAll({ tooltip: Tooltip.new(root, { themeTags: ['axis'] }) });
 
 const cursor = chart.get('cursor');
-cursor.lineX.setAll({
-  forceHidden: true,
-});
+
 cursor.lineY.setAll({
   forceHidden: true,
 });
+
+cursor.events.on('cursormoved', handleCursorMove);
 
 let series = chart.series.push(
   StepLineSeries.new(root, {
@@ -100,4 +107,3 @@ series.strokes.template.setAll({
 series.appear();
 chart.appear();
 series.data.setAll(items);
-xAxis.data.setAll(items);

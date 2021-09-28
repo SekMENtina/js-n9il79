@@ -5,5 +5,21 @@ h2 {
 
 #app {
   width: 98vw;
-  height: 50vh;
+  height: 98vh;
+}
+
+#chart {
+  width: 100%;
+  height: 500px;
+}
+
+.toolbar {
+  height: 100px;
+  width: 100%;
+}
+
+.scroll {
+  height: 200px;
+  width: 100%;
+  overflow-y: auto;
 }
